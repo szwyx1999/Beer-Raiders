@@ -1,3 +1,2 @@
 # Beer-Raiders
-Project site
-https://github.com/szwyx1999/Beer-Raiders-Project-Site/tree/master
+[Project site](https://szwyx1999.github.io/Beer-Raiders-Project-Site/)
