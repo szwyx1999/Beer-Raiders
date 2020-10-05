@@ -19,6 +19,7 @@ playerImg = pygame.image.load('Shoot (1).png')
 playerX_change = 0
 playerX = 475
 playerY = 600
+speed = 3
 
 def player(x, y):
     screen.blit(playerImg, (x, y))
@@ -35,9 +36,9 @@ while running:
         # if keystroke is pressed check if left or right arrow
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                playerX_change = -0.3
+                playerX_change -= speed
             if event.key == pygame.K_RIGHT:
-                playerX_change = 0.3
+                playerX_change = speed
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
