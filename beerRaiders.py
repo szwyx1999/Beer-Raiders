@@ -15,14 +15,16 @@ icon = pygame.image.load('alcohol.png')
 pygame.display.set_icon(icon)
 
 # Player
-playerImg = pygame.image.load('Shoot (1).png')
+playerImg = pygame.image.load('LshootUp(1).png')
 playerX_change = 0
 playerX = 475
 playerY = 600
 speed = 3
+playerImg1 = pygame.image.load('LshootUp(2).png')
 
 def player(x, y):
     screen.blit(playerImg, (x, y))
+    screen.blit(playerImg1, (x, y))
 
 # Game Loop
 running = True
