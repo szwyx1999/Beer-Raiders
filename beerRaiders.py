@@ -36,15 +36,15 @@ walkLeft = [pygame.image.load('BRsprites/LshootUp(1).png'), pygame.image.load('B
 def animation():
     global movCount
 
-    if movCount + 1 >= 16:
+    if movCount + 1 >= 28:
         movCount = 0
 
     if left:
-        screen.blit(walkLeft[movCount // 4], (playerX, playerY))
+        screen.blit(walkLeft[movCount // 7], (playerX, playerY))
         movCount += 1
 
     if right:
-        screen.blit(walkRight[movCount // 4], (playerX, playerY))
+        screen.blit(walkRight[movCount // 7], (playerX, playerY))
         movCount += 1
 
     if not (left or right):
@@ -61,7 +61,7 @@ bulletImg = pygame.image.load('bullet.png')
 bulletX = 0
 bulletY = 620
 bulletX_change = 0
-bulletY_change = 3.5
+bulletY_change = 17
 bullet_state = "ready"
 
 #score
@@ -76,10 +76,6 @@ def show_score(x, y):
     screen.blit(score, (x, y))
 
 
-#def player(x, y):
-   # screen.blit(playerImg, (x, y))
-    #screen.blit(playerImg1, (x, y))
-
 
 def fire_bullet(x,y):
     global bullet_state
@@ -92,7 +88,7 @@ def fire_bullet(x,y):
 running = True
 while running:
 
-    clock.tick(16)
+    clock.tick(40)
     screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
     for event in pygame.event.get():
@@ -102,11 +98,11 @@ while running:
         # if keystroke is pressed check if left or right arrow
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                playerX_change = -5
+                playerX_change = -10
                 left = True
                 right = False
             elif event.key == pygame.K_RIGHT:
-                playerX_change = 5
+                playerX_change = 10
                 right = True
                 left = False
             else:
@@ -124,8 +120,11 @@ while running:
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
+                right = False
+                left = False
+                movCount = 0
 
-        animation()
+
 
     # player movement
     playerX += playerX_change
@@ -143,6 +142,6 @@ while running:
         fire_bullet(bulletX, bulletY)
         bulletY -= bulletY_change
 
-   # player(playerX, playerY)
+    animation()
     show_score(textX, textY)
     pygame.display.update()
