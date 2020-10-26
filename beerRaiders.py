@@ -7,6 +7,9 @@ pygame.init()
 # create the screen
 screen = pygame.display.set_mode((950, 750))
 
+#clock
+clock = pygame.time.Clock()
+
 # Background
 background = pygame.image.load('brewery-background.png')
 
@@ -16,11 +19,40 @@ icon = pygame.image.load('alcohol.png')
 pygame.display.set_icon(icon)
 
 # Player
-playerImg = pygame.image.load("BRsprites/LshootUp(1).png")
+playerImg = pygame.image.load("BRsprites/LshootUp(1).png") #standing sprite
 playerX_change = 0
 playerX = 475
 playerY = 620
-playerX_change = 0
+playerY_change = 0
+left = False
+right = False
+movCount = 0
+
+#animation to walk right
+walkRight = [pygame.image.load('BRsprites/RshootUp(1).png'), pygame.image.load('BRsprites/RshootUp(2).png'), pygame.image.load('BRsprites/RshootUp(3).png'), pygame.image.load('BRsprites/RshootUp(4).png')]
+#animation to walk left
+walkLeft = [pygame.image.load('BRsprites/LshootUp(1).png'), pygame.image.load('BRsprites/LshootUp(2).png'), pygame.image.load('BRsprites/LshootUp(3).png'), pygame.image.load('BRsprites/LshootUp(4).png')]
+
+def animation():
+    global movCount
+
+    if movCount + 1 >= 16:
+        movCount = 0
+
+    if left:
+        screen.blit(walkLeft[movCount // 4], (playerX, playerY))
+        movCount += 1
+
+    if right:
+        screen.blit(walkRight[movCount // 4], (playerX, playerY))
+        movCount += 1
+
+    if not (left or right):
+        screen.blit(playerImg, (playerX, playerY))
+
+    pygame.display.update()
+
+
 
 # bullet
 # ready - you can't see the bullet on teh screen
@@ -44,8 +76,8 @@ def show_score(x, y):
     screen.blit(score, (x, y))
 
 
-def player(x, y):
-    screen.blit(playerImg, (x, y))
+#def player(x, y):
+   # screen.blit(playerImg, (x, y))
     #screen.blit(playerImg1, (x, y))
 
 
@@ -59,6 +91,8 @@ def fire_bullet(x,y):
 # Game Loop
 running = True
 while running:
+
+    clock.tick(16)
     screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
     for event in pygame.event.get():
@@ -68,10 +102,22 @@ while running:
         # if keystroke is pressed check if left or right arrow
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                playerX_change = -2
-            if event.key == pygame.K_RIGHT:
-                playerX_change = 2
+                playerX_change = -5
+                left = True
+                right = False
+            elif event.key == pygame.K_RIGHT:
+                playerX_change = 5
+                right = True
+                left = False
+            else:
+                right = False
+                left = False
+                movCount = 0
+
             if event.key == pygame.K_SPACE:
+                right = False
+                left = False
+                movCount =0
                 if bullet_state is "ready":
                     bulletX = playerX
                     fire_bullet(bulletX, playerY)
@@ -79,12 +125,15 @@ while running:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
 
+        animation()
+
     # player movement
     playerX += playerX_change
     if playerX <= 0:
         playerX = 0
     elif playerX >= 886:
         playerX = 886
+
 
     # bullet movement
     if bulletY <= 0:
@@ -94,6 +143,6 @@ while running:
         fire_bullet(bulletX, bulletY)
         bulletY -= bulletY_change
 
-    player(playerX, playerY)
+   # player(playerX, playerY)
     show_score(textX, textY)
     pygame.display.update()
