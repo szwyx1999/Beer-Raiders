@@ -1,4 +1,5 @@
 import os
+from os import path
 import pygame
 
 # initialize the pygame
@@ -76,12 +77,63 @@ def show_score(x, y):
     screen.blit(score, (x, y))
 
 
-
 def fire_bullet(x,y):
     global bullet_state
     bullet_state = "fire"
     screen.blit(bulletImg, (x + 16, y + 10))
 
+######################################
+######################################
+'''
+Explosion
+'''
+# Define Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+
+# Get the path of images
+img_dir = path.join(path.dirname(__file__), 'images')
+
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self, center, size):
+        pygame.sprite.Sprite.__init__(self)
+        self.size = size
+        self.image = explosion_animation[self.size][0]
+        self.rect = self.image.get_rect()
+        self.rect.center = center
+        self.frame = 0
+        self.last_update = pygame.time.get_ticks()
+        self.frame_rate = 75
+
+    def Exp_update(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_update > self.frame_rate:
+            self.last_update = now
+            self.frame += 1
+            if self.frame == len(explosion_animation[self.size]):
+                self.kill()
+            else:
+                center = self.rect.center
+                self.image = explosion_animation[self.size][self.frame]
+                self.rect = self.image.get_rect()
+                self.rect.center = center
+
+# Load Explosion images
+explosion_animation = []
+for i in range(1, 9):
+    filename = 'explosion_{}.png'.format(i)
+    img = pygame.image.load(path.join(img_dir, filename)).convert()
+    img.set_colorkey(BLACK)
+    # change the size of the explosion
+    img_size = pygame.transform.scale(img, (60, 60))
+    explosion_animation.append(img_size)
+
+######################################
+######################################
 
 
 # Game Loop
