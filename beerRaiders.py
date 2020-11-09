@@ -1,7 +1,8 @@
 import os
 from os import path
 import pygame
-
+import random
+import math
 # initialize the pygame
 pygame.init()
 
@@ -29,9 +30,25 @@ left = False
 right = False
 movCount = 0
 
-#animation to walk right
+# Enemy
+enemyImg = []
+enemyX = []
+enemyY = []
+enemyX_change = []
+enemyY_change = []
+num_of_enemies = 6
+
+for i in range(num_of_enemies):
+    enemyImg.append(pygame.image.load("images/alienship.png"))
+    enemyX.append(random.randint(0, 886))
+    enemyY.append(random.randint(50, 150))
+    enemyX_change.append(12)
+    enemyY_change.append(40)
+
+# animation to walk right
 walkRight = [pygame.image.load('BRsprites/RshootUp(1).png'), pygame.image.load('BRsprites/RshootUp(2).png'), pygame.image.load('BRsprites/RshootUp(3).png'), pygame.image.load('BRsprites/RshootUp(4).png')]
-#animation to walk left
+
+# animation to walk left
 walkLeft = [pygame.image.load('BRsprites/LshootUp(1).png'), pygame.image.load('BRsprites/LshootUp(2).png'), pygame.image.load('BRsprites/LshootUp(3).png'), pygame.image.load('BRsprites/LshootUp(4).png')]
 
 def animation():
@@ -71,16 +88,31 @@ font = pygame.font.Font('freesansbold.ttf', 32)
 textX = 10
 textY = 10
 
+# game over font
+over_font = pygame.font.Font('freesansbold.ttf', 85)
 
 def show_score(x, y):
     score = font.render("Score: " + str(score_value), True, (0, 0, 0))
     screen.blit(score, (x, y))
 
+def game_over_text():
+    over_text = over_font.render("GAME OVER", True, (0, 0, 0))
+    screen.blit(over_text, (230, 320))
 
 def fire_bullet(x,y):
     global bullet_state
     bullet_state = "fire"
     screen.blit(bulletImg, (x + 16, y + 10))
+
+def enemy(x, y, i):
+    screen.blit(enemyImg[i], (x, y))
+
+def isCollision(enemyX, enemyY, bulletX, bulletY):
+    distance = math.sqrt((math.pow(enemyX - bulletX, 2)) + (math.pow(enemyY - bulletY, 2)))
+    if distance < 25:
+        return True
+    else:
+        return False
 
 ######################################
 ######################################
@@ -185,6 +217,33 @@ while running:
     elif playerX >= 886:
         playerX = 886
 
+    # enemy movement
+    for i in range(num_of_enemies):
+
+        # game over
+        if enemyY[i] > 610:
+            for j in range(num_of_enemies):
+                enemyY[j] = 2000
+            game_over_text()
+            break
+        enemyX[i] += enemyX_change[i]
+        if enemyX[i] <= 0:
+            enemyX_change[i] = 12
+            enemyY[i] += enemyY_change[i]
+        elif enemyX[i] >= 886:
+            enemyX_change[i] = -12
+            enemyY[i] += enemyY_change[i]
+
+        # collision
+        collision = isCollision(enemyX[i], enemyY[i], bulletX, bulletY)
+        if collision:
+            bulletY = 620
+            bullet_state = "ready"
+            score_value += 1
+            enemyX[i] = random.randint(0, 886)
+            enemyY[i] = random.randint(50, 150)
+
+        enemy(enemyX[i], enemyY[i], i)
 
     # bullet movement
     if bulletY <= 0:
