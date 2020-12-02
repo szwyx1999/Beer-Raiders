@@ -35,6 +35,7 @@ class BeerRaiders:
             self._update_aliens()
             self._update_screen()
 
+
     def _check_events(self):
         """Respond to keypresses and mouse events."""
         for event in pygame.event.get():
@@ -46,6 +47,7 @@ class BeerRaiders:
             elif event.type == pygame.KEYUP:
                 self.player.animate(False)
                 self._check_keyup_events(event)
+
 
     def _check_keydown_events(self, event):
         """Respond to key presses."""
@@ -70,6 +72,7 @@ class BeerRaiders:
         elif event.key == pygame.K_SPACE:
             self.player.shoot()
 
+
     def _check_keyup_events(self, event):
         """Respond to key releases."""
         if event.key == pygame.K_RIGHT:
@@ -78,6 +81,7 @@ class BeerRaiders:
         elif event.key == pygame.K_LEFT:
             self.player.moving_left = False
             self.player.prevMv = 'moveleft'
+
 
     def _update_bullets(self):
         """Update position of bullets and get rid of old bullets."""
@@ -88,6 +92,7 @@ class BeerRaiders:
             if bullet.rect.bottom <= 0:
                 self.player.bullets.remove(bullet)
 
+
     def _update_aliens(self):
         """
         Check if the fleet is at an edge,
@@ -95,6 +100,7 @@ class BeerRaiders:
         """
         self._check_fleet_edges()
         self.aliens.update()
+
 
     def _create_fleet(self):
         """Create the fleet of aliens."""
@@ -114,6 +120,7 @@ class BeerRaiders:
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
 
+
     def _create_alien(self, alien_number, row_number):
         """Create an alien and place it in the row."""
         alien = Alien(self)
@@ -123,6 +130,7 @@ class BeerRaiders:
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
+
     def _check_fleet_edges(self):
         """Respond appropriately if any aliens have reached the edge."""
         for alien in self.aliens.sprites():
@@ -130,11 +138,13 @@ class BeerRaiders:
                 self._change_fleet_direction()
                 break
 
+
     def _change_fleet_direction(self):
         """Drop the entire fleet and change the fleet's direction."""
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
+
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
@@ -146,53 +156,13 @@ class BeerRaiders:
         self.aliens.draw(self.screen)
         pygame.display.flip()
 
+
 if __name__ == '__main__':
     # Make a game instance, and run the game
     br = BeerRaiders()
     br.run_game()
 
-# Enemy
-# enemyImg = []
-# enemyX = []
-# enemyY = []
-# enemyX_change = []
-# enemyY_change = []
-# num_of_enemies = 6
-#
-# for i in range(num_of_enemies):
-#     enemyImg.append(pygame.image.load("images/alienship.png"))
-#     enemyX.append(random.randint(0, 886))
-#     enemyY.append(random.randint(50, 150))
-#     enemyX_change.append(12)
-#     enemyY_change.append(40)
-#
-# score
-# score_value = 0
-# font = pygame.font.Font('freesansbold.ttf', 32)
-# textX = 10
-# textY = 10
-#
-# game over font
-# over_font = pygame.font.Font('freesansbold.ttf', 85)
-#
-# def show_score(x, y):
-#     score = font.render("Score: " + str(score_value), True, (0, 0, 0))
-#     screen.blit(score, (x, y))
-#
-# def game_over_text():
-#     over_text = over_font.render("GAME OVER", True, (0, 0, 0))
-#     screen.blit(over_text, (230, 320))
-#
-# def enemy(x, y, i):
-#     screen.blit(enemyImg[i], (x, y))
-#
-# def isCollision(enemyX, enemyY, bulletX, bulletY):
-#     distance = math.sqrt((math.pow(enemyX - bulletX, 2)) + (math.pow(enemyY - bulletY, 2)))
-#     if distance < 25:
-#         return True
-#     else:
-#         return False
-#
+
 ######################################
 ######################################
 # """
@@ -245,31 +215,3 @@ if __name__ == '__main__':
 #
 ######################################
 ######################################
-    #
-    # enemy movement
-    # for i in range(num_of_enemies):
-    #
-        # game over
-        # if enemyY[i] > 610:
-        #     for j in range(num_of_enemies):
-        #         enemyY[j] = 2000
-        #     game_over_text()
-        #     break
-        # enemyX[i] += enemyX_change[i]
-        # if enemyX[i] <= 0:
-        #     enemyX_change[i] = 12
-        #     enemyY[i] += enemyY_change[i]
-        # elif enemyX[i] >= 886:
-        #     enemyX_change[i] = -12
-        #     enemyY[i] += enemyY_change[i]
-        #
-        # collision
-        # collision = isCollision(enemyX[i], enemyY[i], bulletX, bulletY)
-        # if collision:
-        #     bulletY = 620
-        #     bullet_state = "ready"
-        #     score_value += 1
-        #     enemyX[i] = random.randint(0, 886)
-        #     enemyY[i] = random.randint(50, 150)
-        #
-        # enemy(enemyX[i], enemyY[i], i)
