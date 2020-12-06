@@ -27,7 +27,7 @@ class Player:
         self.bullets = pygame.sprite.Group()
         self.prevMv = 'moveleft'
 
-        self.xval = float(self.rect.x)
+        self.x = float(self.rect.x)
         self.moving_left = False
         self.moving_right = False
 
@@ -66,19 +66,24 @@ class Player:
         if self.is_animating:
             if self.moving_right and self.rect.right < self.screen_rect.right:
                 self.current_sprite += self.settings.animate_speed
-                self.xval += self.settings.player_speed
+                self.x += self.settings.player_speed
                 if self.current_sprite >= len(self.walkRight):
                     self.current_sprite = 0
                 self.image = self.walkRight[int(self.current_sprite)]
             if self.moving_left and self.rect.left > 0:
                 self.current_sprite += self.settings.animate_speed
-                self.xval -= self.settings.player_speed
+                self.x -= self.settings.player_speed
                 if self.current_sprite >= len(self.walkLeft):
                     self.current_sprite = 0
                 self.image = self.walkLeft[int(self.current_sprite)]
-        # Update rect object from self.playerX
-        self.rect.x = self.xval
+        # Update rect object from self.x
+        self.rect.x = self.x
 
     def blitme(self):
         """Draw the player at its current location."""
         self.screen.blit(self.image, self.rect)
+
+    def center_player(self):
+        """Center the player on the screen."""
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)
